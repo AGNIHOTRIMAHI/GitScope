@@ -15,25 +15,21 @@ const HomePage = () => {
 	const getUserProfileAndRepos = useCallback(async (username = "mahiagnihotri") => {
 		setLoading(true);
 		try {
-			const userRes = await fetch(`https://api.github.com/users/${username}`,{
-				headers:{
-					authorization:`token ${import.meta.env.VITE_GITHUB_API_KEY}`,
-				}, 
-			});
-			const userProfile=await userRes.json();
-			setUserProfile(userProfile);
-
-			const repoRes=await fetch(userProfile.repos_url);
-			const repos=await repoRes.json();
+			const res=await fetch(`http://localhost:5000/api/users/profile/${username}`);
+			
+			const {repos,userProfile}=await res.json();
+			console.log(userProfile);
             repos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
+           
 			setRepos(repos);
+			setUserProfile(userProfile);
 			console.log("userProfile:",userProfile);
 			console.log("repos:",repos);
 			
 
-		return {userProfile,repos};
+		    return {userProfile,repos};
 		} catch (error) {
+			console.log(error);
 			toast.error(error.message);
 		} finally {
 			setLoading(false);
@@ -46,6 +42,7 @@ const HomePage = () => {
 
 	const onSearch=async(e,username)=>{
 		e.preventDefault();
+
 		setLoading(true);
 		setRepos([]);
 		setUserProfile(null);
@@ -66,6 +63,7 @@ const HomePage = () => {
 		setSortType(sortType);
 		setRepos([...repos]);
 	};
+	
 
 	return (
 		<div className='m-4'>
