@@ -9,9 +9,9 @@ import Sidebar from './components/Sidebar.jsx'
 import { useAuthContext } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
 const App = () => {
-  const {authUser} = useAuthContext();
+  const {authUser,loading} = useAuthContext();
 	console.log("Authenticated user:", authUser);
-
+  if(loading)return null;
   return (
     <div className='flex'>
       <Sidebar/>
